@@ -8,27 +8,19 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: "20"
           cache: "pnpm"
-
       - name: Setup pnpm
-        run: npm install -g pnpm
-
-      - name: Add pnpm to PATH
-        run: echo "::add-path::$(npm bin -g)"
-
+        uses: pnpm/action-setup@v2
       - name: Install dependencies
         run: pnpm install
-
       - name: Publish to npm
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH}}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH }}
         run: pnpm publish
