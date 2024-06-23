@@ -1,5 +1,5 @@
 {
-  "name": "dir_manager",
+  "name": "@rghaniloo/dir_manager",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
@@ -7,12 +7,17 @@
     "dirmanager": "./dist/index.js"
   },
   "scripts": {
-    "build": "npx tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npx tsc"
   },
+  "keywords": [
+    "cli",
+    "npm tool"
+  ],
   "keywords": [],
-  "author": "",
+  "author": "reza ghaniloo",
   "license": "ISC",
+  "repository": "https://github.com/RGHANILOO/dirmanager_cli",
+  "homepage": "https://github.com/RGHANILOO/dirmanager_cli#readme",
   "dependencies": {
     "commander": "^12.1.0",
     "figlet": "^1.7.0"
