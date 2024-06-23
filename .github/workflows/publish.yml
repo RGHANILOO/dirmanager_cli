@@ -1,22 +1,31 @@
-name: "publish package to npm"
+name: Publish pnpm package
 
-on: push
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   publish:
     runs-on: ubuntu-latest
+
     steps:
-      - name: checkout
+      - name: Checkout repository
         uses: actions/checkout@v3
-      - name: node
+
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18
-          registry-url: https://registry.npmjs.org
-      - name: Print npm config
-        run: npm config list
+          node-version: "20"
+          cache: "pnpm"
 
-      - name: publish
-        run: npm publish --access public
+      - name: Setup pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Publish to npm
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH}}
+        run: pnpm publish
