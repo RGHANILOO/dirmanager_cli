@@ -1,28 +1,31 @@
-name: Publish pnpm package
-
+name: Publish
 on:
-  push:
-    branches:
-      - main
+  workflow_run:
+    workflows: [CI]
+    branches: [main]
+    types: [completed]
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+permissions:
+  contents: write
+  pull-requests: write
 
 jobs:
   publish:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-      - name: Setup Node.js <----failing here
-        uses: actions/setup-node@v3
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
         with:
-          node-version: "20"
+          version: 8
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
           cache: "pnpm"
-      - name: Setup pnpm
-        run: npm install -g pnpm
-      - name: Add pnpm to PATH
-        run: echo "::add-path::$(npm bin -g)"
-      - name: Install dependencies
-        run: pnpm install
-      - name: Publish to npm
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm publish --access public
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH}}
-        run: pnpm publish
+          NPM_TOKEN: ${{ secrets.NPM_AUTH }}
